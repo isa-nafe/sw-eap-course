@@ -1,0 +1,44 @@
+{% extends 'course/base.html' %}
+{% load humanize %}
+
+{% block content %}
+  <h2>Course Materials</h2>
+  {% if materials %}
+    <table border="1" style="width:100%; border-collapse: collapse; margin-top: 20px;">
+      <thead>
+        <tr style="background-color: #f2f2f2;">
+          <th style="padding: 8px; text-align: left;">Title</th>
+          <th style="padding: 8px; text-align: left;">Type</th>
+          <th style="padding: 8px; text-align: left;">Description</th>
+          <th style="padding: 8px; text-align: left;">Uploaded</th>
+          <th style="padding: 8px; text-align: left;">Instructor</th>
+          <th style="padding: 8px; text-align: left;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for material in materials %}
+          <tr>
+            <td style="padding: 8px; border-top: 1px solid #ddd;">{{ material.title }}</td>
+            <td style="padding: 8px; border-top: 1px solid #ddd;">{{ material.get_material_type_display }}</td>
+            <td style="padding: 8px; border-top: 1px solid #ddd;">{{ material.description|truncatewords:20|default:"-" }}</td>
+            <td style="padding: 8px; border-top: 1px solid #ddd;">{{ material.uploaded_at|naturaltime }}</td>
+            <td style="padding: 8px; border-top: 1px solid #ddd;">{{ material.uploaded_by.username|default:"N/A" }}</td>
+            <td style="padding: 8px; border-top: 1px solid #ddd;">
+              {% if material.file %}
+                <a href="{% url 'course:serve_protected_material' material.id %}">Download</a>
+              {% else %}
+                No file
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" style="padding: 8px; text-align: center;">No course materials have been uploaded yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No course materials have been uploaded yet. Check back soon!</p>
+  {% endif %}
+{% endblock %}

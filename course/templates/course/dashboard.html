@@ -1,0 +1,18 @@
+{% extends 'course/base.html' %}
+
+{% block content %}
+  <h2>Dashboard</h2>
+  <p>Welcome, {{ user.username }}!</p>
+
+  {% if is_instructor %}
+    <p>You are logged in as an <strong>Instructor</strong>.</p>
+    <p><a href="/admin/">Access Admin Panel</a></p>
+  {% else %}
+    <p>You are logged in as a Student.</p>
+  {% endif %}
+
+  <p>This is your course dashboard. Course materials will appear here once you are enrolled.</p>
+  <p><a href="{% url 'course:course_planner' %}">View Course Planner</a></p>
+  <p><a href="{% url 'course:course_materials_list' %}">View Course Materials</a></p>
+  <!-- We will add links to course planner and materials later -->
+{% endblock %}

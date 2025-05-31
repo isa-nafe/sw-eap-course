@@ -1,0 +1,32 @@
+{% extends 'course/base.html' %}
+{% load course_extras %} {# Load custom template tags #}
+
+{% block content %}
+  <h2>Course Planner</h2>
+  {% if planner_data and headers %}
+    <table border="1" style="width:100%; border-collapse: collapse; margin-top: 20px;">
+      <thead>
+        <tr style="background-color: #f2f2f2;">
+          {% for header in headers %}
+            <th style="padding: 8px; text-align: left;">{{ header }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row_dict in planner_data %}
+          <tr>
+            {% for header in headers %}
+              <td style="padding: 8px; border-top: 1px solid #ddd;">
+                {{ row_dict|get_item:header|default_if_none:"" }}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% elif not headers %}
+    <p>Could not load planner headers. The planner file might be empty or misformatted.</p>
+  {% else %}
+    <p>The course planner is not available or is empty. Please check back later or contact the instructor.</p>
+  {% endif %}
+{% endblock %}
