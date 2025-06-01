@@ -1,12 +1,26 @@
 {% extends 'course/base.html' %}
 {% load crispy_forms_tags %}
 
+{% block title %}Login - {{ block.super }}{% endblock %}
+
 {% block content %}
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <button type="submit">Login</button>
-  </form>
-  <p><a href="{% url 'course:register' %}">Don't have an account? Register here.</a></p>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Login</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary mt-3">Login</button>
+                    </div>
+                </form>
+            </div>
+             <div class="card-footer text-center">
+                <small>Don't have an account? <a href="{% url 'course:register' %}">Register here</a>.</small>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

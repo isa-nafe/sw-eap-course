@@ -1,0 +1,15 @@
+{% extends 'course/base.html' %}
+{% block title %}Payment Successful - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="card shadow-sm" style="max-width: 500px; margin: auto;">
+        <div class="card-body">
+            <h2 class="card-title text-success">Payment Successful!</h2>
+            <p class="card-text">Thank you for your purchase. You now have full access to all course materials.</p>
+            <a href="{% url 'course:dashboard' %}" class="btn btn-primary me-2">Go to Dashboard</a>
+            <a href="{% url 'course:course_materials_list' %}" class="btn btn-info">View Course Materials</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

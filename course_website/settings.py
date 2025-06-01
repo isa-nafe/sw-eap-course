@@ -144,3 +144,5 @@ STRIPE_SECRET_KEY = 'sk_test_YOUR_SECRET_KEY'
 STRIPE_WEBHOOK_SECRET = 'whsec_YOUR_WEBHOOK_SECRET' # Optional, for webhook handling
 COURSE_PRICE_DOLLARS = 200 # Define course price in whole dollars
 COURSE_PRICE_CENTS = COURSE_PRICE_DOLLARS * 100 # Define course price in cents for Stripe
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

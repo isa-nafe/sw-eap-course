@@ -1,18 +1,42 @@
 {% extends 'course/base.html' %}
+{% block title %}Dashboard - {{ block.super }}{% endblock %}
 
 {% block content %}
-  <h2>Dashboard</h2>
-  <p>Welcome, {{ user.username }}!</p>
+  <div class="container">
+    <h2 class="mb-4">Dashboard</h2>
+    <p class="lead">Welcome, {{ user.username }}!</p>
 
-  {% if is_instructor %}
-    <p>You are logged in as an <strong>Instructor</strong>.</p>
-    <p><a href="/admin/">Access Admin Panel</a></p>
-  {% else %}
-    <p>You are logged in as a Student.</p>
-  {% endif %}
+    {% if is_instructor %}
+      <div class="alert alert-info" role="alert">
+        You are logged in as an <strong>Instructor</strong>. <a href="/admin/" class="alert-link">Access Admin Panel</a>.
+      </div>
+    {% else %}
+      <p>You are logged in as a Student.</p>
+      {% if not has_paid %}
+        <div class="alert alert-warning" role="alert">
+          <h4 class="alert-heading">Unlock Full Course Access!</h4>
+          <p>Gain access to all course materials, including lessons, homework, and lecture recordings for <strong>${{ course_price_dollars }}</strong>.</p>
+          <hr>
+          <form action="{% url 'course:create_checkout_session' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-lg">Enroll Now for ${{ course_price_dollars }}</button>
+          </form>
+        </div>
+      {% else %}
+        <div class="alert alert-success" role="alert">
+          <p class="mb-0"><strong>Thank you for enrolling!</strong> You have full access to the course.</p>
+        </div>
+      {% endif %}
+    {% endif %}
 
-  <p>This is your course dashboard. Course materials will appear here once you are enrolled.</p>
-  <p><a href="{% url 'course:course_planner' %}">View Course Planner</a></p>
-  <p><a href="{% url 'course:course_materials_list' %}">View Course Materials</a></p>
-  <!-- We will add links to course planner and materials later -->
+    <p>This is your course dashboard. Use the links below to navigate the course content.</p>
+    <div class="list-group">
+      <a href="{% url 'course:course_planner' %}" class="list-group-item list-group-item-action">View Course Planner</a>
+      {% if has_paid or is_instructor or user.is_staff %}
+        <a href="{% url 'course:course_materials_list' %}" class="list-group-item list-group-item-action">View Course Materials</a>
+      {% else %}
+        <a href="{% url 'course:course_materials_list' %}" class="list-group-item list-group-item-action disabled" aria-disabled="true" title="Enroll in the course to access materials">View Course Materials (Enrollment Required)</a>
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}

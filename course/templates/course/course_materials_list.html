@@ -1,44 +1,61 @@
 {% extends 'course/base.html' %}
 {% load humanize %}
+{% block title %}Course Materials - {{ block.super }}{% endblock %}
 
 {% block content %}
-  <h2>Course Materials</h2>
-  {% if materials %}
-    <table border="1" style="width:100%; border-collapse: collapse; margin-top: 20px;">
-      <thead>
-        <tr style="background-color: #f2f2f2;">
-          <th style="padding: 8px; text-align: left;">Title</th>
-          <th style="padding: 8px; text-align: left;">Type</th>
-          <th style="padding: 8px; text-align: left;">Description</th>
-          <th style="padding: 8px; text-align: left;">Uploaded</th>
-          <th style="padding: 8px; text-align: left;">Instructor</th>
-          <th style="padding: 8px; text-align: left;">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for material in materials %}
+  <h2 class="mb-4">Course Materials</h2>
+
+  {% if payment_required %}
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">Access Restricted</h4>
+        <p>These course materials are available upon enrollment. Please purchase the course to gain access.</p>
+        <hr>
+        <form action="{% url 'course:create_checkout_session' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Enroll Now for ${{ course_price_dollars }}</button>
+        </form>
+        <p class="mt-2"><a href="{% url 'course:dashboard' %}" class="btn btn-secondary btn-sm">Back to Dashboard</a></p>
+    </div>
+  {% elif materials %}
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
           <tr>
-            <td style="padding: 8px; border-top: 1px solid #ddd;">{{ material.title }}</td>
-            <td style="padding: 8px; border-top: 1px solid #ddd;">{{ material.get_material_type_display }}</td>
-            <td style="padding: 8px; border-top: 1px solid #ddd;">{{ material.description|truncatewords:20|default:"-" }}</td>
-            <td style="padding: 8px; border-top: 1px solid #ddd;">{{ material.uploaded_at|naturaltime }}</td>
-            <td style="padding: 8px; border-top: 1px solid #ddd;">{{ material.uploaded_by.username|default:"N/A" }}</td>
-            <td style="padding: 8px; border-top: 1px solid #ddd;">
-              {% if material.file %}
-                <a href="{% url 'course:serve_protected_material' material.id %}">Download</a>
-              {% else %}
-                No file
-              {% endif %}
-            </td>
+            <th scope="col">Title</th>
+            <th scope="col">Type</th>
+            <th scope="col">Description</th>
+            <th scope="col">Uploaded</th>
+            <th scope="col">Instructor</th>
+            <th scope="col">Action</th>
           </tr>
-        {% empty %}
-          <tr>
-            <td colspan="6" style="padding: 8px; text-align: center;">No course materials have been uploaded yet.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for material in materials %}
+            <tr>
+              <td>{{ material.title }}</td>
+              <td>{{ material.get_material_type_display }}</td>
+              <td>{{ material.description|truncatewords:15|default:"-" }}</td>
+              <td>{{ material.uploaded_at|naturaltime }}</td>
+              <td>{{ material.uploaded_by.username|default:"N/A" }}</td>
+              <td>
+                {% if material.file %}
+                  <a href="{% url 'course:serve_protected_material' material.id %}" class="btn btn-primary btn-sm">Download</a>
+                {% else %}
+                  <span class="text-muted">No file</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6" class="text-center">No course materials have been uploaded yet.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   {% else %}
-    <p>No course materials have been uploaded yet. Check back soon!</p>
+    <div class="alert alert-secondary" role="alert">
+      No course materials have been uploaded yet or are available to you. Check back soon!
+    </div>
   {% endif %}
 {% endblock %}

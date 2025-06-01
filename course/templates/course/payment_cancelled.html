@@ -1,0 +1,15 @@
+{% extends 'course/base.html' %}
+{% block title %}Payment Cancelled - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+     <div class="card shadow-sm" style="max-width: 500px; margin: auto;">
+        <div class="card-body">
+            <h2 class="card-title text-warning">Payment Cancelled</h2>
+            <p class="card-text">Your payment process was cancelled. You have not been charged.</p>
+            <p class="card-text">You can attempt to purchase the course again at any time from your dashboard.</p>
+            <a href="{% url 'course:dashboard' %}" class="btn btn-secondary">Return to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
